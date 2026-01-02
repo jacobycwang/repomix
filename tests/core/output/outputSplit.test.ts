@@ -181,11 +181,11 @@ describe('outputSplit', () => {
         expect(part.filePath).toContain(`.${part.index}.`);
         expect(part.content).toBeTruthy();
         expect(part.byteLength).toBeGreaterThan(0);
-        expect(part.groups.length).toBeGreaterThan(0);
+        expect(part.groups?.length).toBeGreaterThan(0);
       }
 
       // All groups should be distributed across parts (no duplicates)
-      const allGroupRootEntries = result.flatMap((p) => p.groups.map((g) => g.rootEntry));
+      const allGroupRootEntries = result.flatMap((p) => p.groups?.map((g) => g.rootEntry) ?? []);
       const uniqueRootEntries = [...new Set(allGroupRootEntries)];
       expect(allGroupRootEntries.length).toBe(uniqueRootEntries.length);
 

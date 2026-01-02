@@ -24,6 +24,7 @@ export interface CliOptions extends OptionValues {
   includeEmptyDirectories?: boolean;
   includeFullDirectoryStructure?: boolean;
   splitOutput?: number; // bytes
+  maxTokens?: number;
   gitSortByChanges?: boolean;
   includeDiffs?: boolean;
   includeLogs?: boolean;

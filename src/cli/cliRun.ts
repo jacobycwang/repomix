@@ -123,6 +123,16 @@ export const run = async () => {
           'Split output into multiple numbered files (e.g., repomix-output.1.xml, repomix-output.2.xml); size like 500kb, 2mb, or 2.5mb',
         ).argParser(parseHumanSizeToBytes),
       )
+      .option(
+        '--max-tokens <number>',
+        'Split output into multiple numbered files based on maximum tokens per file',
+        (v: string) => {
+          if (!/^\d+$/.test(v)) {
+            throw new RepomixError(`Invalid number for --max-tokens: '${v}'. Must be a positive integer.`);
+          }
+          return Number(v);
+        },
+      )
       .option('--include-empty-directories', 'Include folders with no files in directory structure')
       .option(
         '--include-full-directory-structure',

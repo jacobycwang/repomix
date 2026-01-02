@@ -78,8 +78,12 @@ const calculateFileLineCounts = (processedFiles: ProcessedFile[]): Record<string
 
 export const createRenderContext = (outputGeneratorContext: OutputGeneratorContext): RenderContext => {
   return {
-    generationHeader: generateHeader(outputGeneratorContext.config, outputGeneratorContext.generationDate),
-    summaryPurpose: generateSummaryPurpose(outputGeneratorContext.config),
+    generationHeader: generateHeader(
+      outputGeneratorContext.config,
+      outputGeneratorContext.generationDate,
+      outputGeneratorContext.splitInfo,
+    ),
+    summaryPurpose: generateSummaryPurpose(outputGeneratorContext.config, outputGeneratorContext.splitInfo),
     summaryFileFormat: generateSummaryFileFormat(),
     summaryUsageGuidelines: generateSummaryUsageGuidelines(
       outputGeneratorContext.config,
@@ -102,6 +106,7 @@ export const createRenderContext = (outputGeneratorContext: OutputGeneratorConte
     gitLogEnabled: outputGeneratorContext.config.output.git?.includeLogs,
     gitLogContent: outputGeneratorContext.gitLogResult?.logContent,
     gitLogCommits: outputGeneratorContext.gitLogResult?.commits,
+    splitInfo: outputGeneratorContext.splitInfo,
   };
 };
 
@@ -257,6 +262,11 @@ export const generateOutput = async (
   allFilePaths: string[],
   gitDiffResult: GitDiffResult | undefined = undefined,
   gitLogResult: GitLogResult | undefined = undefined,
+  splitInfo?: {
+    partNumber: number;
+    totalParts: number;
+    totalFiles: number;
+  },
   deps = {
     buildOutputGeneratorContext,
     generateHandlebarOutput,
@@ -275,6 +285,7 @@ export const generateOutput = async (
     sortedProcessedFiles,
     gitDiffResult,
     gitLogResult,
+    splitInfo,
   );
   const renderContext = createRenderContext(outputGeneratorContext);
 
@@ -300,6 +311,11 @@ export const buildOutputGeneratorContext = async (
   processedFiles: ProcessedFile[],
   gitDiffResult: GitDiffResult | undefined = undefined,
   gitLogResult: GitLogResult | undefined = undefined,
+  splitInfo?: {
+    partNumber: number;
+    totalParts: number;
+    totalFiles: number;
+  },
   deps = {
     listDirectories,
     listFiles,
@@ -379,5 +395,11 @@ export const buildOutputGeneratorContext = async (
     instruction: repositoryInstruction,
     gitDiffResult,
     gitLogResult,
+    splitInfo: splitInfo
+      ? {
+          ...splitInfo,
+          totalPartFiles: processedFiles.length,
+        }
+      : undefined,
   };
 };

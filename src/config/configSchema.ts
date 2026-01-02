@@ -41,6 +41,7 @@ export const repomixConfigBaseSchema = z.object({
       includeEmptyDirectories: z.boolean().optional(),
       includeFullDirectoryStructure: z.boolean().optional(),
       splitOutput: z.number().int().min(1).optional(),
+      maxTokens: z.number().int().min(1).optional(),
       tokenCountTree: z.union([z.boolean(), z.number(), z.string()]).optional(),
       git: z
         .object({

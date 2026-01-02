@@ -46,12 +46,23 @@ export const analyzeContent = (config: RepomixConfigMerged): ContentInfo => {
   };
 };
 
-export const generateHeader = (config: RepomixConfigMerged, _generationDate: string): string => {
+export const generateHeader = (
+  config: RepomixConfigMerged,
+  _generationDate: string,
+  splitInfo?: {
+    partNumber: number;
+    totalParts: number;
+    totalPartFiles: number;
+    totalFiles: number;
+  },
+): string => {
   const info = analyzeContent(config);
 
   // Generate selection description
   let description: string;
-  if (info.selection.isEntireCodebase) {
+  if (splitInfo) {
+    description = `This file is part ${splitInfo.partNumber} of ${splitInfo.totalParts} of a split representation of the entire codebase.\nThis file contains ${splitInfo.totalPartFiles} out of a total of ${splitInfo.totalFiles} files.`;
+  } else if (info.selection.isEntireCodebase) {
     description = 'This file is a merged representation of the entire codebase';
   } else {
     const parts = [];
@@ -91,12 +102,25 @@ export const generateHeader = (config: RepomixConfigMerged, _generationDate: str
   return `${description}, combined into a single document by Repomix.\n${processingInfo}`.trim();
 };
 
-export const generateSummaryPurpose = (config: RepomixConfigMerged): string => {
+export const generateSummaryPurpose = (
+  config: RepomixConfigMerged,
+  splitInfo?: {
+    partNumber: number;
+    totalParts: number;
+    totalPartFiles: number;
+    totalFiles: number;
+  },
+): string => {
   const info = analyzeContent(config);
 
-  const contentDescription = info.selection.isEntireCodebase
-    ? "the entire repository's contents"
-    : "a subset of the repository's contents that is considered the most important context";
+  let contentDescription: string;
+  if (splitInfo) {
+    contentDescription = `part ${splitInfo.partNumber} of ${splitInfo.totalParts} of the entire repository's contents (${splitInfo.totalPartFiles}/${splitInfo.totalFiles} files)`;
+  } else {
+    contentDescription = info.selection.isEntireCodebase
+      ? "the entire repository's contents"
+      : "a subset of the repository's contents that is considered the most important context";
+  }
 
   return `
 This file contains a packed representation of ${contentDescription}.

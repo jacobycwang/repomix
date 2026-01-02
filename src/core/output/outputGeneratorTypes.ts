@@ -11,6 +11,12 @@ export interface OutputGeneratorContext {
   instruction: string;
   gitDiffResult: GitDiffResult | undefined;
   gitLogResult: GitLogResult | undefined;
+  splitInfo?: {
+    partNumber: number;
+    totalParts: number;
+    totalPartFiles: number;
+    totalFiles: number;
+  };
 }
 
 export interface RenderContext {
@@ -35,4 +41,10 @@ export interface RenderContext {
   readonly gitLogEnabled: boolean;
   readonly gitLogContent: string | undefined;
   readonly gitLogCommits: GitLogCommit[] | undefined;
+  readonly splitInfo?: {
+    partNumber: number;
+    totalParts: number;
+    totalPartFiles: number;
+    totalFiles: number;
+  };
 }

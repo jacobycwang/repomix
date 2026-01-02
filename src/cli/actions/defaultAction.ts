@@ -290,6 +290,13 @@ export const buildCliConfig = (options: CliOptions): RepomixConfigCli => {
     };
   }
 
+  if (options.maxTokens !== undefined) {
+    cliConfig.output = {
+      ...cliConfig.output,
+      maxTokens: options.maxTokens,
+    };
+  }
+
   // Only apply gitSortByChanges setting if explicitly set to false
   if (options.gitSortByChanges === false) {
     cliConfig.output = {

@@ -33,14 +33,16 @@ export const produceOutput = async (
   const deps = { ...defaultDeps, ...overrideDeps };
 
   const splitMaxBytes = config.output.splitOutput;
+  const splitMaxTokens = config.output.maxTokens;
 
-  if (splitMaxBytes !== undefined) {
+  if (splitMaxBytes !== undefined || splitMaxTokens !== undefined) {
     return await generateAndWriteSplitOutput(
       rootDirs,
       config,
       processedFiles,
       allFilePaths,
       splitMaxBytes,
+      splitMaxTokens,
       gitDiffResult,
       gitLogResult,
       progressCallback,
@@ -65,7 +67,8 @@ const generateAndWriteSplitOutput = async (
   config: RepomixConfigMerged,
   processedFiles: ProcessedFile[],
   allFilePaths: string[],
-  splitMaxBytes: number,
+  splitMaxBytes: number | undefined,
+  splitMaxTokens: number | undefined,
   gitDiffResult: GitDiffResult | undefined,
   gitLogResult: GitLogResult | undefined,
   progressCallback: RepomixProgressCallback,
@@ -78,6 +81,7 @@ const generateAndWriteSplitOutput = async (
       processedFiles,
       allFilePaths,
       maxBytesPerPart: splitMaxBytes,
+      maxTokensPerPart: splitMaxTokens,
       gitDiffResult,
       gitLogResult,
       progressCallback,
